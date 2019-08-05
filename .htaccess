@@ -1,0 +1,17 @@
+ReWriteEngine on
+ReWritecond %{REQUEST_URL} !^public
+
+# End the processing, if a rewrite already occurred
+# RewriteRule ^(frontend|backend)/web/ - [L]
+RewriteRule ^backend(.*)$ backend/web/$1 [L,PT]
+# handle the case of frontend
+RewriteRule ^(.*)$ frontend/web/$1 [L,QSA]
+
+
+<IfModule php5_module>
+   php_value output_buffering on
+</IfModule>
+<IfModule lsapi_module>
+   php_value output_buffering on
+</IfModule>
+# END cPanel-generated php ini directives, do not edit
