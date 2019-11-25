@@ -36,7 +36,7 @@ $dataStatus = [0 => ' Chưa duyệt ',1=>'Đã duyệt'];
                 },
             ],
             'phone',
-            // 'email:email',
+            'email:email',
             // 'address',
             [
                 'attribute'=>'product_id',

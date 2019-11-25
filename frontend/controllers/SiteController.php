@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\helpers\Url;
 use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -11,12 +12,8 @@ use app\models\setting\FSettingWebsite;
 use app\models\setting\FSettingModules;
 use app\models\setting\FRegister;
 use app\models\setting\FProduct;
-// use common\models\LoginForm;
-// use frontend\models\PasswordResetRequestForm;
-// use frontend\models\ResetPasswordForm;
-// use frontend\models\SignupForm;
-// use frontend\models\ContactForm;
-use frontend\models\product\FProductType;
+// use PHPMailer\PHPMailer\PHPMailer;
+// use PHPMailer\PHPMailer\Exception;
 /**
  * Site controller
  */
@@ -51,25 +48,6 @@ class SiteController extends Controller
                     'getprice' => ['post'],
                 ],
             ],
-
-            // 'corsFilter' => [
-            //     'class' => \yii\filters\Cors::className(),
-            //     'cors' => [
-            //     // restrict access to
-            //         'Origin' => ['http://local.langpage.vn/', 'https://local.langpage.vn/'],
-            //     // Allow only POST and PUT methods
-            //         'Access-Control-Request-Method' => ['POST', 'PUT'],
-            //     // Allow only headers 'X-Wsse'
-            //         'Access-Control-Request-Headers' => ['X-Wsse'],
-            //     // Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
-            //         'Access-Control-Allow-Credentials' => true,
-            //     // Allow OPTIONS caching
-            //         'Access-Control-Max-Age' => 3600,
-            //     // Allow the X-Pagination-Current-Page header to be exposed to the browser.
-            //         'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-            //     ],
-
-            // ],
         ];
     }
 
@@ -119,7 +97,7 @@ class SiteController extends Controller
 
         $models = new FProduct();
         $products = $models->getAllProduct();
-        // dbg($product);
+        // dbg($products);
         $register = new FRegister();
         if (empty($products['dataProduct'])) {
             $register->product_id = 1;
@@ -131,179 +109,102 @@ class SiteController extends Controller
         $register->userCreated = 999;
         $register->userUpdated = 999;
         
+        // Gửi email khi đăng ký 
+        // $email = new Sendmail();
 
         if (Yii::$app->request->isAjax && $register->load(Yii::$app->request->post())) {
-            header('Access-Control-Allow-Origin: *; Content-Type: application/json; charset=UTF-8');
+            // header('Access-Control-Allow-Origin: *; Content-Type: application/json; charset=UTF-8');
             Yii::$app->response->format = 'json';
             return ActiveForm::validate($register);
         }
 
         if ($register->load($post = Yii::$app->request->post())) {
-            
+            if (!isset($post['FRegister']['quantity'])) {
+                $post['FRegister']['quantity'] = 0;
+            }
+
+            if (!isset($post['FRegister']['product_id'])) {
+                $post['FRegister']['product_id'] = 1;
+                $productInfo = $models->getProductInfo($post['FRegister']['product_id'],false);
+            }else {
+                $productInfo = $models->getProductInfo($post['FRegister']['product_id']);
+            }
+            // pr($post['FRegister']['product_id']);
+            // dbg($productInfo);
+            $txtTable = '<table class="table-send" style="border-collapse: collapse;width: 800px;font-size: 18px">';
+            $txtTable = '<tr> <th colspan="2" style="color: red; padding: 6px 15px;border: 1px dotted;">Có khách hàng liên hệ ngày : '.Yii::$app->formatter->asDateTime(time(),'php:d-m-Y H:i').' - trên : '.Url::home(true).'</th> </tr>';
+            $txtTable .= '<tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Tên :</th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.$post['FRegister']['name'].'</td>
+            </tr>
+            <tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Số điện thoại : </th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.$post['FRegister']['phone'].'</td>
+            </tr>
+            <tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Email : </th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.$post['FRegister']['email'].'</td>
+            </tr>
+            <tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Địa chỉ : </th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.$post['FRegister']['address'].'</td>
+            </tr>
+            <tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Sản phẩm : </th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.$productInfo['proName'].'</td>
+            </tr>
+            <tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Số lượng : </th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.$post['FRegister']['quantity'].'</td>
+            </tr>
+            <tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Đơn giá : </th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.Yii::$app->formatter->asDecimal($productInfo['price']).'</td>
+            </tr>
+            <tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Thành tiền : </th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.Yii::$app->formatter->asDecimal($post['FRegister']['quantity']*$productInfo['price']).'</td>
+            </tr>
+            <tr>
+            <th width="20%" style="padding: 6px 10px; text-align: left;border: 1px dotted;">Ghi chú : </th>
+            <td style="color: #0000ff; padding: 6px 15px;border: 1px dotted;">'.$post['FRegister']['note'].'</td>
+            </tr></table>';
             if($register->save()){
                 Yii::$app->session->setFlash('messeage','Bạn đã đặt hàng thành công, chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.');
                 // return $this->redirect(['index']);
+                $subject = 'Có khách hàng liên hệ ngày : '.Yii::$app->formatter->asDateTime(time(),'php:d-m-Y H:i').' - trên : '.Url::home(true);
+                $this->actionSend($post['FRegister']['email'],$subject,$txtTable);
                 return $this->redirect('/');
             }
-        }
-        // pr($infoWebsite);
-// dbg($productType);
-        // dbg($data);
-        // dbg(24*60*60);
-        // $cache = \Yii::$app->cache;
-        // $key= "cache_productType";
-        // $data = $cache->get($key);
-        // if($data === false)
-        // {
-        //     $data = new FProductType();
-        //     $data = $data->getAllType();
 
-        //     // $data = Article::find()->all();
-        //     $cache->set($key, $data,86400);
-        // }
+        }
+        
         return $this->render('index',['infoWebsite'=>$infoWebsite,'data'=>$data,'register'=>$register,'products'=>$products]);
     }
-
-    public function actionCategory()
-    {
-        return $this->render('category');
-    }
-
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
-
-            return $this->render('login', [
-                'model' => $model,
-            ]);
+    public function actionSend($emailTo,$subject,$body) {
+        $send = Yii::$app->mailer->compose()
+        ->setFrom(Yii::$app->params['adminEmail'])
+        ->setTo($emailTo)
+        ->setCc( Yii::$app->params['adminEmail'] )
+        ->setBcc( Yii::$app->params['managerEmail'] )
+        ->setSubject($subject)
+        ->setHtmlBody($body)
+        // ->setHtmlBody('<b>HTML content <i>Ram Pukar</i></b>')
+        ->send();
+        if($send){
+            echo "Send";
         }
     }
 
-    /**
-     * Logs out the current user.
-     *
-     * @return mixed
-     */
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
+    // function sendEmail($subject,$body)
+    // {
+    //     return Yii::$app->mailer->compose()
+    //     ->setTo(Yii::$app->params['adminEmail'])
+    //     ->setFrom([$this->email => 'Test Thu Email'])
+    //     ->setSubject($this->subject)
+    //     ->setTextBody($this->body)
+    //     ->send();
+    // }
 
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
-    /**
-     * Signs user up.
-     *
-     * @return mixed
-     */
-    public function actionSignup()
-    {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
-            }
-        }
-
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Requests password reset.
-     *
-     * @return mixed
-     */
-    public function actionRequestPasswordReset()
-    {
-        $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
-
-                return $this->goHome();
-            } else {
-                Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
-            }
-        }
-
-        return $this->render('requestPasswordResetToken', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Resets password.
-     *
-     * @param string $token
-     * @return mixed
-     * @throws BadRequestHttpException
-     */
-    public function actionResetPassword($token)
-    {
-        try {
-            $model = new ResetPasswordForm($token);
-        } catch (InvalidParamException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
-
-            return $this->goHome();
-        }
-
-        return $this->render('resetPassword', [
-            'model' => $model,
-        ]);
-    }
+   
 }

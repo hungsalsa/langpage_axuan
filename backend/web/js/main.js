@@ -1,90 +1,45 @@
 var host = window.location.href; //backend
 host = host.split("backend");
-
-
-
-
-/*tinymce.init({
-  selector: "textarea.content",
-    theme: "modern",
-    width: "",
-    height: 150,
-    plugins: [
-         "code advlist autolink link image lists charmap print preview hr anchor pagebreak",
-         "searchreplace wordcount visualblocks visualchars insertdatetime media nonbreaking spellchecker",
-         "table contextmenu directionality emoticons paste textcolor responsivefilemanager fullscreen"
-   ],
-   toolbar1: "code undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
-   toolbar2: "| responsivefilemanager | image | media | link unlink anchor | print preview fullscreen",
-    menubar: false,
-    toolbar_items_size: 'small',
-    relative_urls: false,
-    remove_script_host:false,
-
-    filemanager_title:"Responsive Filemanager",
-    // filemanager_crossdomain: true,
-    external_filemanager_path: host[0]+"filemanager/",
-    external_plugins: { "filemanager" : host[0]+"filemanager/plugin.min.js"},
-    filemanager_access_key:"ae8c77efd8f0ccaa1aed347113d4a6c2" ,
-  
-   image_advtab: true,
-   image_title: true,
-   image_description: true,
-  image_dimensions: true,
-  image_class_list: [
-      { title: "Responsive", value: "lazy img-responsive img-post" }
-  ],
-
- });
-*/
-
+var base_url = window.location.origin;
+// var base_url = host.replace("backend", "");
+// alert(base_url);
 tinymce.init({
   selector: "textarea.content",
   element_format : 'html',
   theme : "modern",
-  // theme: "silver",
   height: 280,
-  // forced_root_block : 'div',
-    // width: 220,
-    // plugins: "paste",
-    // theme_modern_font_sizes: "10px,12px,13px,14px,16px,18px,20px",
-    // font_size_style_values: "12px,13px,14px,16px,18px,20px",
-    plugins: [
-    "code autolink link image lists charmap print preview hr anchor pagebreak",
-    "searchreplace wordcount visualblocks visualchars insertdatetime media nonbreaking spellchecker",
-    "table contextmenu directionality emoticons paste textcolor responsivefilemanager fullscreen"
-    ],
-    theme_advanced_buttons3_add : "pastetext,pasteword,selectall",
-    toolbar1: "code undo redo | bold italic underline fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
-    toolbar2: "responsivefilemanager | pastetext removeformat searchreplace | table | media |link unlink anchor| print preview fullscreen",
+  
+  plugins: 'code print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists textcolor wordcount imagetools contextmenu colorpicker textpattern',
+  toolbar1: "code undo redo | bold italic underline fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
+  toolbar2: 'bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | pastetext removeformat searchreplace | table |image media |link unlink anchor| print preview fullscreen',
+
+  image_advtab: true,
+
+
+    // plugins: [
+    // "code autolink link image lists charmap print preview hr anchor pagebreak importcss",
+    // "searchreplace wordcount visualblocks visualchars insertdatetime media nonbreaking spellchecker",
+    // "table contextmenu directionality emoticons paste textcolor responsivefilemanager fullscreen"
+    // ],
+    // theme_advanced_buttons3_add : "pastetext,pasteword,selectall",
+    // toolbar1: "code undo redo | bold italic underline fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect",
+    // toolbar2: "responsivefilemanager | pastetext removeformat searchreplace | table | media |link unlink anchor| print preview fullscreen",
     fontsize_formats: "8px 10px 12px 14px 18px 24px 36px",
-    menubar: false,
+    // menubar: "format",
+    valid_elements : '*[*]',
     toolbar_items_size: 'small',
     relative_urls: false,
     remove_script_host:false,
-    // paste_as_text: true
-    // paste_as_text: true
-    // paste_text_sticky : true,
-    // paste_text_sticky_default: true
-    // paste_as_text: true
-    // images_upload_base_path: 'uploads/',
-    // file_browser_callback: "openmanager",
-    // open_manager_upload_path: 'uploads/',
-
+    // content_css: "/my-styles.css",
+    importcss_append: true,
+    allow_script_urls: true,
+    extended_valid_elements : "script[type|src]",
+    relative_urls : true,
+    document_base_url : base_url,
     filemanager_title:"Quản lý file",
-    // filemanager_crossdomain: true,
     external_filemanager_path: host[0]+"filemanager/",
     external_plugins: { "filemanager" : host[0]+"filemanager/plugin.min.js"},
     filemanager_access_key:"dfc78fb912939b31a2798211ae7e950c",
-
-
-
-// image_advtab: true,
-// image_title: true,
-// image_description: true,
-// image_dimensions: true,
-// branding: false
-
 });
 
 $(document).ready(function(){

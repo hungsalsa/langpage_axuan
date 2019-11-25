@@ -45,7 +45,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             //'date',
             //'content:ntext',
-            //'status',
+            [
+               'attribute' => 'status',
+               'format' => 'raw',
+               'value'=>function ($data) {
+                    return ($data->status == 0) ? ' Ẩn ':' Kích hoạt ';
+                },
+            ],
             [
                 'attribute' => 'created_at',
                 'format' => ['date', 'php:H:i d-m-Y']

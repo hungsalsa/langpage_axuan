@@ -12,7 +12,7 @@ class AppAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'bootstrap/version-3.1.1.min.css',
+        'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
         'font-awesome/css/all.min.css',
         'css/global.css'
         /*'css/bootstrap.min.css',
@@ -27,7 +27,8 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         // 'js/jquery-3.3.1.min.js',
-        'bootstrap/version-3.1.1.min.js',
+        // 'bootstrap/version-3.1.1.min.js',
+        'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
         'js/index.min.js',
         'js/bootstrap-notify.min.js'
     ];

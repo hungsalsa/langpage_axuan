@@ -67,7 +67,7 @@ AppAsset::register($this);
             </div>
         </div>
         <!-- /.container-fluid -->
-        <footer class="footer text-center"> 2018 &copy; Lê Hưng : hungld0912@gmail.com </footer>
+        <footer class="footer text-center"> 2019 &copy; Lê Hưng : hungld0912@gmail.com </footer>
         <!-- ============================================================== -->
         <!-- End Page Content -->
         <!-- ============================================================== -->

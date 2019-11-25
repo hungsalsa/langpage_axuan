@@ -5,9 +5,9 @@ use kartik\select2\Select2;
 $this->title = 'Làm landing page';
 ?>
 <?php if (!empty($data)): ?>
-<?php foreach ($data as $key => $value): ?>
+<?php foreach ($data as $key => $value):?>
 
-<section id="zone-<?= $key+1 ?>">
+<section id="zone-<?= $value['id'] ?>">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
@@ -18,7 +18,9 @@ $this->title = 'Làm landing page';
         </div>
       </div>
     </div>
-    <?php if ($value['registration'] == 1 && $value['date'] >= time()): ?>
+    <?php if ($value['registration'] == 1): ?>
+      <?php if ($value['date'] >= time()): ?>
+        
       
       <section id="countdown-<?= $key+1 ?>">
         <div class="container">
@@ -59,8 +61,8 @@ $this->title = 'Làm landing page';
           </div>
         </div>
       </section>
-
-      <?php if ($value['date'] >= time()): ?>
+      <?php endif ?>
+      <?php if ($value['registration'] == 1): ?>
       <section id="form-<?= $key+1 ?>">
         <div class="container">
           <div class="row">
@@ -74,7 +76,6 @@ $this->title = 'Làm landing page';
         </div>
       </section>
       <?php endif ?>
-      
   <?php endif ?>
   </section>
 

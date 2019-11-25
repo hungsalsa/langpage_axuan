@@ -75,7 +75,7 @@ return [
                 'other/value-attribute/update'=>'quantri/product-attributes-values/update',
                 'other/value-attribute/delete'=>'quantri/product-attributes-values/delete',
 
-                'defaultRoute' => '/quantri/product',
+                'defaultRoute' => '/setting/setting-modules',
             ],
         ],
         'authManager' => [
@@ -85,4 +85,5 @@ return [
         
     ],
     'params' => $params,
+    'defaultRoute' => 'register',
 ];

@@ -28,7 +28,8 @@
         "kartik-v/yii2-grid": "@dev",
         "alexandernst/yii2-device-detect": "0.0.12",
         "kartik-v/yii2-widget-datetimepicker": "dev-master",
-        "kartik-v/yii2-widget-datepicker": "dev-master"
+        "kartik-v/yii2-widget-datepicker": "dev-master",
+        "phpmailer/phpmailer": "^6.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

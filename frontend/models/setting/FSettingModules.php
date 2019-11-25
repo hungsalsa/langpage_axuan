@@ -66,6 +66,6 @@ class FSettingModules extends \yii\db\ActiveRecord
 
     public function getAllSettingModules($status=true)
     {
-        return self::find()->select(['name','registration','date','content'])->where('status=:status',[':status'=>$status])->orderBy(['order' => SORT_ASC])->asArray()->all();
+        return self::find()->select(['id','name','registration','date','content'])->where('status=:status',[':status'=>$status])->orderBy(['order' => SORT_ASC])->asArray()->all();
     }
 }

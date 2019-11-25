@@ -37,7 +37,21 @@ $this->params['breadcrumbs'][] = $this->title;
             'price',
             'image',
             'note:ntext',
-            //'status',
+            // 'status',
+            [
+                'attribute' =>'status',
+                'contentOptions' => ['class' => 'text-center','style'=>'width:8%'],
+                'format'=>'html',
+                'content' => function($model,$key,$index, $column) {
+                    $classbtn = ($model->status==0)? 'btn-danger':'btn-success';
+                    return Html::button(($model->status==0)?' Ẩn ':'Kích hoạt',$options = [
+                        'data-id'=>$key,
+                        'id'=>'status'.$key,
+                        "data-url"=>Yii::$app->getUrlManager()->createUrl(['/product/statuschange']),
+                        "class"=>"btn btn-block btn-outline $classbtn Quickactive change",
+                    ]);
+                },
+            ],
             //'created_at',
             //'updated_at',
             [
@@ -67,3 +81,4 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     <?php Pjax::end(); ?>
 </div>
+<?php $this->registerJsFile('@web/js/product/global.js', ['depends' => [\yii\web\JqueryAsset::class]] );

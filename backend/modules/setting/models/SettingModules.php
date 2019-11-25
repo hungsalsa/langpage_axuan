@@ -35,8 +35,8 @@ class SettingModules extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'status', 'created_at', 'updated_at', 'userCreated', 'userUpdated'], 'required'],
-            [['registration', 'status', 'created_at', 'updated_at', 'userCreated', 'userUpdated'], 'integer'],
+            [['name', 'status', 'created_at', 'updated_at', 'userCreated', 'userUpdated','registration'], 'required'],
+            [['status', 'created_at', 'updated_at', 'userCreated', 'userUpdated'], 'integer'],
             [['order'], 'number'],
             [['date'], 'safe'],
             [['content'], 'string'],
@@ -52,11 +52,11 @@ class SettingModules extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'name' => 'Tên modules',
-            'registration' => 'Đăng ký',
+            'registration' => 'Form đăng ký',
             'date' => 'Ngày hết hạn',
             'content' => 'Content',
             'order' => 'Sắp xếp',
-            'active' => 'Kích hoạt',
+            'status' => 'Kích hoạt',
             'created_at' => 'Ngày tạo',
             'updated_at' => 'Ngày sửa',
             'userCreated' => 'Người tạo',
